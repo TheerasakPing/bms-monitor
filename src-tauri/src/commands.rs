@@ -157,7 +157,9 @@ pub async fn query_all_data(state: State<'_, AppState>) -> Result<CommandResult<
                 *can_manager.lock() = Some(temp_manager);
                 result
             } else {
-                Err(crate::can_handler::CanError::DeviceNotFound("Not connected".to_string()))
+                Err(crate::can_handler::CanError::DeviceNotFound(
+                    "Not connected".to_string(),
+                ))
             }
         }
     })
@@ -211,11 +213,31 @@ pub fn get_alarm_descriptions() -> Vec<(u8, String, u8)> {
         (19, "Charging low temperature protection".to_string(), 3),
         (20, "Discharging over temperature protection".to_string(), 3),
         (21, "Discharging low temperature protection".to_string(), 3),
-        (22, "Discharging over current protection level 1".to_string(), 3),
-        (23, "Discharging over current protection level 2".to_string(), 3),
-        (24, "Charging over current protection level 1".to_string(), 3),
-        (25, "Charging over current protection level 2".to_string(), 3),
-        (26, "Charging over current protection level 3".to_string(), 3),
+        (
+            22,
+            "Discharging over current protection level 1".to_string(),
+            3,
+        ),
+        (
+            23,
+            "Discharging over current protection level 2".to_string(),
+            3,
+        ),
+        (
+            24,
+            "Charging over current protection level 1".to_string(),
+            3,
+        ),
+        (
+            25,
+            "Charging over current protection level 2".to_string(),
+            3,
+        ),
+        (
+            26,
+            "Charging over current protection level 3".to_string(),
+            3,
+        ),
         (27, "Total charging over voltage protection".to_string(), 3),
         (28, "Total charging under voltage protection".to_string(), 3),
         (29, "Charging DC contactor failure".to_string(), 3),

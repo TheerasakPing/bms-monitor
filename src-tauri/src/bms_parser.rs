@@ -210,7 +210,11 @@ pub fn parse_alarm_status(data: &[u8]) -> Option<AlarmStatus> {
 }
 
 /// Build a query frame for a specific command
-pub fn build_query_frame(command: BmsCommand, source_address: u8, destination_address: u8) -> CanFrame {
+pub fn build_query_frame(
+    command: BmsCommand,
+    source_address: u8,
+    destination_address: u8,
+) -> CanFrame {
     let frame_id = ParsedFrameId {
         ptp: true,
         command: command as u8,

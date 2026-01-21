@@ -268,11 +268,9 @@ impl CanManager {
                 }
             }
             AdapterType::UsbCan | AdapterType::BluetoothCan => {
-                let port_name = self
-                    .config
-                    .serial_port
-                    .as_ref()
-                    .ok_or_else(|| CanError::DeviceNotFound("No serial port specified".to_string()))?;
+                let port_name = self.config.serial_port.as_ref().ok_or_else(|| {
+                    CanError::DeviceNotFound("No serial port specified".to_string())
+                })?;
 
                 let port = serialport::new(port_name, self.config.serial_baud_rate)
                     .timeout(Duration::from_millis(1000))
