@@ -61,3 +61,12 @@ src-tauri/gen/schemas/
 *.deb
 *.rpm
 *.AppImage
+
+# PDF files
+*.pdf
+*.PDF
+
+# Dot folders (hidden folders)
+.*/
+!.github/
+!.vscode/
