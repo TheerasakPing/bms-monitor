@@ -1,6 +1,6 @@
 {
   "productName": "BMS Battery Monitor",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "identifier": "com.bms.monitor",
   "build": {
     "beforeDevCommand": "npm run dev",
@@ -31,6 +31,9 @@
       "icons/128x128@2x.png",
       "icons/icon.icns",
       "icons/icon.ico"
+    ],
+    "resources": [
+      "resources/ControlCAN.dll"
     ]
   }
 }
