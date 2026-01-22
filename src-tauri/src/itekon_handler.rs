@@ -146,8 +146,25 @@ impl ItekonHandler {
 
     /// Load the DLL and connect to the device
     pub fn connect(&mut self) -> Result<(), String> {
-        // Try different DLL names
-        let dll_names = [
+        // Build list of paths to try
+        let mut dll_paths: Vec<std::path::PathBuf> = Vec::new();
+
+        // First, try the bundled resources directory (where Tauri places it)
+        if let Ok(exe_path) = std::env::current_exe() {
+            if let Some(exe_dir) = exe_path.parent() {
+                // Windows: resources folder next to exe
+                dll_paths.push(exe_dir.join("resources").join("ControlCAN.dll"));
+                // Also try directly next to exe
+                dll_paths.push(exe_dir.join("ControlCAN.dll"));
+            }
+        }
+
+        // Try current working directory
+        dll_paths.push(std::path::PathBuf::from("ControlCAN.dll"));
+        dll_paths.push(std::path::PathBuf::from("resources/ControlCAN.dll"));
+
+        // Alternative DLL names (system paths)
+        let system_dlls = [
             "ControlCAN.dll",
             "ECanVci64.dll",
             "ECANVCI.dll",
@@ -155,15 +172,35 @@ impl ItekonHandler {
         ];
 
         let mut lib = None;
-        for name in &dll_names {
-            match unsafe { Library::new(name) } {
-                Ok(l) => {
-                    log::info!("Loaded CAN library: {}", name);
-                    lib = Some(l);
-                    break;
+
+        // Try bundled paths first
+        for path in &dll_paths {
+            if path.exists() {
+                match unsafe { Library::new(path) } {
+                    Ok(l) => {
+                        log::info!("Loaded CAN library from: {:?}", path);
+                        lib = Some(l);
+                        break;
+                    }
+                    Err(e) => {
+                        log::debug!("Failed to load {:?}: {}", path, e);
+                    }
                 }
-                Err(e) => {
-                    log::debug!("Failed to load {}: {}", name, e);
+            }
+        }
+
+        // Fall back to system paths
+        if lib.is_none() {
+            for name in &system_dlls {
+                match unsafe { Library::new(name) } {
+                    Ok(l) => {
+                        log::info!("Loaded CAN library: {}", name);
+                        lib = Some(l);
+                        break;
+                    }
+                    Err(e) => {
+                        log::debug!("Failed to load {}: {}", name, e);
+                    }
                 }
             }
         }

@@ -7,6 +7,12 @@
 
 | ID | Time | T | Title | Read |
 |----|------|---|-------|------|
+| #2696 | 7:30 AM | 🟣 | Added iTEKON USBCAN-2I adapter support with Windows VCI API integration | ~207 |
+| #2695 | 7:24 AM | 🔄 | Cleaned up iTEKON CAN handler by removing unused imports and duplicate device type | ~160 |
+| #2694 | 7:23 AM | 🟣 | Added support for iTEKON CAN adapter type | ~147 |
+| #2688 | 7:21 AM | 🟣 | Added iTEKON USBCAN-2I/ZLG CAN adapter support to AdapterType enum | ~148 |
+| #2687 | " | 🟣 | Added itekon_handler module to BMS Monitor backend library | ~124 |
+| #2686 | " | 🟣 | Implemented iTEKON USBCAN-2I handler with VCI API support | ~193 |
 | #2682 | 4:46 AM | 🔴 | Fixed Rust code formatting issues detected by CI pipeline | ~171 |
 | #2658 | 3:32 AM | 🔴 | Further optimized CAN query timing and added timestamp updates | ~176 |
 | #2657 | 3:26 AM | 🔄 | Optimized query_all_data receive timeout for faster simulation performance | ~164 |

@@ -7,6 +7,9 @@
 
 | ID | Time | T | Title | Read |
 |----|------|---|-------|------|
+| #2696 | 7:30 AM | 🟣 | Added iTEKON USBCAN-2I adapter support with Windows VCI API integration | ~207 |
+| #2693 | 7:23 AM | 🟣 | Added itekon adapter type support to BMS store | ~142 |
+| #2692 | " | 🟣 | Added iTEKON adapter type to BMS store adapter selection | ~154 |
 | #2669 | 4:07 AM | 🟣 | Added test data generator for CAN frame logging demonstration in debug mode | ~211 |
 | #2667 | 4:05 AM | 🔴 | Fixed event listener cleanup on disconnect to prevent memory leaks | ~178 |
 | #2666 | " | 🟣 | Implemented real-time CAN frame event listener for debug logging | ~186 |
