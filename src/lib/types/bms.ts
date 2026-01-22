@@ -287,7 +287,7 @@ export interface SerialPortConfig {
 /** USB-CAN adapter configuration */
 export interface CANAdapterConfig {
   /** Adapter type */
-  adapterType: "I+BT" | "I+USB" | "SocketCAN" | "Other";
+  adapterType: "I+BT" | "I+USB" | "SocketCAN" | "iTEKON" | "Simulation" | "Other";
   /** CAN baud rate (default 125000) */
   canBaudRate: number;
   /** Serial port for USB adapters */

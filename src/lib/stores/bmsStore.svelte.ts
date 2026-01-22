@@ -15,7 +15,7 @@ interface CanFrameEvent {
 let connected = $state(false);
 let selectedPort = $state('');
 let availablePorts = $state<string[]>([]);
-let adapterType = $state<'usb' | 'bluetooth' | 'simulation'>('simulation');
+let adapterType = $state<'usb' | 'bluetooth' | 'itekon' | 'simulation'>('simulation');
 let connectionError = $state<string | null>(null);
 
 // BMS data state
@@ -48,7 +48,7 @@ export function getBmsData() { return bmsData; }
 
 // Setters
 export function setSelectedPort(port: string) { selectedPort = port; }
-export function setAdapterType(type: 'usb' | 'bluetooth' | 'simulation') { adapterType = type; }
+export function setAdapterType(type: 'usb' | 'bluetooth' | 'itekon' | 'simulation') { adapterType = type; }
 
 // List available serial ports
 export async function listPorts(): Promise<void> {
@@ -69,7 +69,7 @@ export async function connect(): Promise<boolean> {
 
     const config = {
       adapter_type: adapterType,
-      serial_port: adapterType !== 'simulation' ? selectedPort : null,
+      serial_port: (adapterType !== 'simulation' && adapterType !== 'itekon') ? selectedPort : null,
       serial_baud_rate: 115200,
       bms_address: 0x01,
     };

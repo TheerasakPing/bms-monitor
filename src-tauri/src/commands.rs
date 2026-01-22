@@ -78,6 +78,7 @@ pub fn connect(config: ConnectionConfig, state: State<'_, AppState>) -> CommandR
     let adapter_type = match config.adapter_type.as_str() {
         "usb" => AdapterType::UsbCan,
         "bluetooth" => AdapterType::BluetoothCan,
+        "itekon" => AdapterType::ItekonCan,
         "simulation" => AdapterType::Simulation,
         _ => AdapterType::UsbCan,
     };

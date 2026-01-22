@@ -124,15 +124,16 @@
           <select
             class="select"
             value={adapterType}
-            onchange={(e) => setAdapterType((e.target as HTMLSelectElement).value as 'usb' | 'bluetooth' | 'simulation')}
+            onchange={(e) => setAdapterType((e.target as HTMLSelectElement).value as 'usb' | 'bluetooth' | 'itekon' | 'simulation')}
           >
             <option value="simulation">Simulation (Demo)</option>
             <option value="usb">USB-CAN (I+ Series)</option>
             <option value="bluetooth">Bluetooth CAN (I+BT)</option>
+            <option value="itekon">iTEKON USBCAN-2I (ZLG)</option>
           </select>
         </div>
 
-        {#if adapterType !== 'simulation'}
+        {#if adapterType !== 'simulation' && adapterType !== 'itekon'}
           <div class="form-group">
             <label>Serial Port</label>
             <div class="port-select">

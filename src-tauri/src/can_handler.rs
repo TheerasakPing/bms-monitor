@@ -64,10 +64,12 @@ impl Default for CanConfig {
 /// Adapter type
 #[derive(Debug, Clone, Copy, Serialize, Deserialize, PartialEq)]
 pub enum AdapterType {
-    /// I+ Series USB-CAN adapter
+    /// I+ Series USB-CAN adapter (via serial port)
     UsbCan,
     /// I+BT Bluetooth CAN adapter
     BluetoothCan,
+    /// iTEKON USBCAN-2I / ZLG compatible (via VCI DLL)
+    ItekonCan,
     /// SocketCAN (Linux only)
     #[cfg(target_os = "linux")]
     SocketCan,
@@ -237,6 +239,7 @@ impl Default for SimulationHandler {
 pub struct CanManager {
     simulation_handler: Option<SimulationHandler>,
     serial_port: Option<Box<dyn serialport::SerialPort + Send>>,
+    itekon_handler: Option<crate::itekon_handler::ItekonHandler>,
     config: CanConfig,
     bms_data: Arc<Mutex<BmsData>>,
     running: Arc<Mutex<bool>>,
@@ -252,6 +255,7 @@ impl CanManager {
                 None
             },
             serial_port: None,
+            itekon_handler: None,
             config,
             bms_data,
             running: Arc::new(Mutex::new(false)),
@@ -281,6 +285,15 @@ impl CanManager {
                 self.connected = true;
                 log::info!("Connected to USB-CAN adapter on {}", port_name);
             }
+            AdapterType::ItekonCan => {
+                let mut handler = crate::itekon_handler::ItekonHandler::new();
+                handler
+                    .connect()
+                    .map_err(|e| CanError::DeviceNotFound(e))?;
+                self.itekon_handler = Some(handler);
+                self.connected = true;
+                log::info!("Connected to iTEKON USBCAN adapter");
+            }
             #[cfg(target_os = "linux")]
             AdapterType::SocketCan => {
                 // TODO: Implement SocketCAN
@@ -301,7 +314,12 @@ impl CanManager {
             handler.disconnect()?;
         }
 
+        if let Some(ref mut handler) = self.itekon_handler {
+            handler.disconnect().map_err(|e| CanError::IoError(e))?;
+        }
+
         self.serial_port = None;
+        self.itekon_handler = None;
         self.connected = false;
         log::info!("Disconnected");
         Ok(())
@@ -322,6 +340,13 @@ impl CanManager {
                     handler.send_frame(frame)?;
                 }
             }
+            AdapterType::ItekonCan => {
+                if let Some(ref handler) = self.itekon_handler {
+                    handler
+                        .send_frame(frame)
+                        .map_err(|e| CanError::IoError(e))?;
+                }
+            }
             _ => {
                 if let Some(ref mut port) = self.serial_port {
                     let data = build_iplus_frame(frame);
@@ -338,6 +363,13 @@ impl CanManager {
             AdapterType::Simulation => {
                 if let Some(ref mut handler) = self.simulation_handler {
                     return handler.receive_frame(timeout);
+                }
+            }
+            AdapterType::ItekonCan => {
+                if let Some(ref handler) = self.itekon_handler {
+                    return handler
+                        .receive_frame(timeout)
+                        .map_err(|e| CanError::IoError(e));
                 }
             }
             _ => {
